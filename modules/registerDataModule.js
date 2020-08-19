@@ -94,12 +94,12 @@ function registerUser(username, email, password){
 }
 
 // function to check if the user exists
-function checkUser(username, password) {
+function checkUser(email, password) {
     // your code
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
             
-            Users.findOne({username: username}).then(user => {
+            Users.findOne({email: email}).then(user => {
                 
                 if (user) {
                     if (passwordHash.verify(password, user.password)) {

@@ -3,10 +3,17 @@ const express = require('express')
 //include data module
 const dataModule = require('../modules/mongooseDataModule')
 const registerDataModule = require('../modules/registerDataModule')
+const registerStudentDataModule = require('../modules/studentDataModule')
 const adminRouter = express.Router()
 
-
-
+// use the seesion in admin route
+adminRouter.use((req,res,next)=> {
+    if (req.session.user) {
+        next()
+    } else {
+        res.redirect('/login')
+    }
+})
 
 // admin panel handler
 adminRouter.get('/', (req, res)=>{
@@ -31,7 +38,7 @@ adminRouter.post('/addQuestion', (req, res) => {
     if (question && answer && choice1 && choice2 && choice3) {
         //const imgs=[]
         //imgs.push(choice1,choice2,choice3)
-        dataModule.addQuestion(question,answer,choice1,choice2,choice3, '1').then(() =>{
+        dataModule.addQuestion(question,answer,choice1,choice2,choice3, req.session.user._id).then(() =>{
             res.json(1)
         }).catch(error => {
             if (error == 3) {
@@ -48,7 +55,7 @@ adminRouter.post('/addQuestion', (req, res) => {
 adminRouter.get('/getAllQuestion', (req,res)=>{
 
     dataModule.getAllQuestion().then((questions)=>{
-        
+        console.log(questions);
         res.render('getAllQuestions', {questions})
     }).catch(error =>{
        
@@ -91,7 +98,7 @@ const questionid = req.body.questionid
 
 if(newQuestion && newAnswer && newChoice1 &&  newChoice2 && newChoice3 && questionid){
   
-    dataModule.updatedQuestions(newQuestion, newAnswer, newChoice1, newChoice2, newChoice3, questionid).then(()=>{
+    dataModule.updatedQuestions(newQuestion, newAnswer, newChoice1, newChoice2, newChoice3, questionid,req.session.user._id).then(()=>{
 
         res.json(1)
     }).catch(error =>{
@@ -113,7 +120,7 @@ adminRouter.post('/deleteQuestions', (req, res) => {
      
  const deleteQuestionId =  req.body.deleteQuestionId
 
-    dataModule.deleteQuestion(deleteQuestionId).then(() =>{
+    dataModule.deleteQuestion(deleteQuestionId,req.session.user._id).then(() =>{
         res.json(1)
     }).catch(error =>{
         res.json(2)
@@ -126,7 +133,44 @@ adminRouter.post('/deleteQuestions', (req, res) => {
 //     res.redirect('/login')
 // });
 
+// register page handler
+adminRouter.get('/addStudent', (req, res)=>{
+    res.render('addStudent')
+})
 
+// register page handler
+adminRouter.post('/addStudent', (req, res)=>{
+    console.log(req.body);
+   //this is the register post handler
+   //1 means user registered successfully //  res.json(1)
+   //2 means data error // res.json(2)
+   //3 means user exists
+   //4 means server error
+    const studentName = req.body.studentName
+    const email = req.body.email
+    const password = req.body.password
+    
+    if(studentName && email && password ){
+        registerStudentDataModule.registerStudent(studentName.trim(),email.trim(),password,req.session.user._id).then(()=>{
+        res.json(1)
+        }).catch(error=>{
+            console.log(error);
+            if(error == 'exist'){
+                res.json(3)
+            } else{
+                res.json(4)
+            }
+            
+        })
+    } else{
+        res.json(2)
+    }
+    
+});
 
+adminRouter.get('/logout', (req, res) => {
+    req.session.destroy()
+    res.redirect('/login')
+});
 
 module.exports = adminRouter

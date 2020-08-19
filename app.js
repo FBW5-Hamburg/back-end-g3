@@ -1,11 +1,13 @@
 // connect the dependencies
 const express = require('express')
+const session = require('express-session')
 const path = require('path')
-// const session = require('express-session')
+
 // end connecting dependencies
 
 //include data Module
 
+const dataModule = require('./modules/mongooseDataModule')
 const registerDataModule = require('./modules/registerDataModule')  
 
 const adminRouter = require('./routes/adminRoute')
@@ -22,6 +24,14 @@ app.use(express.json())
 // set the public folder url 
 app.use(express.static(path.join(__dirname, 'public')))
 
+const sessionOptions = {
+    secret: 'questionstore',
+    resave: false,
+    saveUninitialized: false,
+   // cookie: {} //secure when we have https in the path
+}
+//use a session
+app.use(session(sessionOptions))
 // set view engine and views path
 app.set('view engine', 'ejs')
 app.set('views', 'views');
@@ -43,14 +53,24 @@ app.use('/admin', adminRouter);
 
 // main page questionary
 app.get('/', (req, res)=>{
-    const options = [
-        {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
-        {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
-        {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
-        {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
-        {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
-    ];
-    res.render('main', {options})
+    // const options = [
+    //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
+    //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
+    //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
+    //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
+    //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
+    // ];
+    dataModule.getAllQuestion().then((questions)=>{
+        console.log(questions);
+        const options= questions
+        res.render('main2' , {options: JSON.stringify( options)})
+    }).catch(error =>{
+       
+     res.json(2)
+        
+    })
+    
+    
 });
  
 // register page handler
@@ -71,7 +91,7 @@ app.post('/registerUser', (req, res)=>{
     const password = req.body.password
     const passwordRep = req.body.passwordRep
     if(email && password && password == passwordRep){
-        registerModule.registerUser(username.trim(),email.trim(),password).then(()=>{
+        registerDataModule.registerUser(username.trim(),email.trim(),password).then(()=>{
         res.json(1)
         }).catch(error=>{
             console.log(error);
@@ -90,16 +110,25 @@ app.post('/registerUser', (req, res)=>{
 
 
 
+
+
 // admin login page handler
 app.get('/login', (req, res)=>{
-    res.render('loginUser')
+    // res.render('loginUser')
+    if (req.session.user) {
+        res.redirect('/admin')
+    } else {
+        res.render('loginUser')
+    }
 })
 
 app.post('/login', (req, res) => {
     console.log(req.body);
-    if (req.body.username && req.body.password) {
-        registerDataModule.checkUser(req.body.username.trim(),req.body.password).then(user => {
-            // req.session.user = user
+    if (req.body.email && req.body.password) {
+        registerDataModule.checkUser(req.body.email.trim(),req.body.password).then(user => {
+            
+            req.session.user = user
+            console.log(req.session.user);
             res.json(1)
         }).catch(error => {
             if (error == 3) {

@@ -138,7 +138,7 @@ function getAllQuestion() {
 }
 
 // this function is for editing the questions , choices and answer
-function updatedQuestions(question, answer, ch1, ch2, ch3, questionid) {
+function updatedQuestions(question, answer, ch1, ch2, ch3, questionid , userId) {
     return new Promise((resolve, reject) => {
         try { // with async function we need try catch to get an error- 
 
@@ -165,7 +165,7 @@ function updatedQuestions(question, answer, ch1, ch2, ch3, questionid) {
                     Q: question,
                     A: answer,
                     C: choicesArr,
-
+                    userid: userId
                 })
 
                 resolve()
@@ -180,18 +180,22 @@ function updatedQuestions(question, answer, ch1, ch2, ch3, questionid) {
 }
 
 // function to delete the question from the database
-function deleteQuestion(questionid) {
+function deleteQuestion(questionid, userId) {
     return new Promise((resolve, reject) => {
-        getQuestion(questionid).then(() => {
-            
+        getQuestion(questionid).then(question => {
+            if (question.userid === userId) {
+                Questions.deleteOne({
+                    _id: questionid
+                }).then(() => {
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            } else {
+                reject(new Error('Nice Try Hacking :) '))
+            }
                
-                    Questions.deleteOne({
-                        _id: questionid
-                    }).then(() => {
-                        resolve()
-                    }).catch(error => {
-                        reject(error)
-                    })
+                    
                
            
         }).catch(error => {
@@ -200,6 +204,26 @@ function deleteQuestion(questionid) {
     })
 }
 
+// export function getAllQuestion1() {
+    
+//             connectFcn().then(() => {
+//                     Questions.find().then(questions => {
+//                         if (questions) {
+//                             return(questions)
+//                         } else {
+//                             return(new Error("can not find this questions"))
+//                         }
+
+//                     }).catch(error => {
+//                         return(error)
+//                     })
+
+//             }).catch(error => {
+//                 return(error)
+//             })
+
+    
+// }
 
 // exporting the functions via module
 module.exports = {

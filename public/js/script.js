@@ -1,6 +1,13 @@
 
+// // connect the dependencies express
+// const express = require('express')
+// //include data module
+// const dataModule = require('../modules/mongooseDataModule')
 /*--------loader script-----------*/
 $(function(){
+
+    // import { getAllQuestion1 } from '/modules/mongooseDataModule.js';
+
     var loading = $('#loadbar').hide();
     $(document)
     .ajaxStart(function () {
@@ -11,7 +18,16 @@ $(function(){
     
     var questionNo = 0;
     var correctCount = 0;
-  
+    
+    // var q =  dataModule.getAllQuestion();
+
+    var q = [
+        {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
+        {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
+        {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
+        {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
+        {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
+    ];
 
  
     $(document.body).on('click',"label.element-animation",function (e) {

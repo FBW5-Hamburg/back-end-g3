@@ -35,8 +35,8 @@
 						Sign In
 					</span>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<input class="input100" type="text" name="username" placeholder="Username" id="usernameInp">
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter email">
+						<input class="input100" type="text" name="email" placeholder="Email" id="emailInp">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -96,14 +96,14 @@
 	<script>
 		document.querySelector('#loginBtn').addEventListener('click', e => {
 			e.preventDefault()
-			const username = document.querySelector('#usernameInp').value.trim()
+			const email = document.querySelector('#emailInp').value.trim()
             const password = document.querySelector('#passInp').value.trim()
             
             //check data is not empty and password matches the repassword
-            if (username && password) {
+            if (email && password) {
                 //create an object to be send 
                 const sentObj = {
-                    username,
+                    email,
                     password
                 }
                 //send data using fetch
