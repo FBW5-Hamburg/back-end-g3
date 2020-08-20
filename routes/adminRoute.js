@@ -2,8 +2,7 @@
 const express = require('express')
 //include data module
 const dataModule = require('../modules/mongooseDataModule')
-const registerDataModule = require('../modules/registerDataModule')
-const registerStudentDataModule = require('../modules/studentDataModule')
+
 const adminRouter = express.Router()
 
 // use the seesion in admin route
@@ -127,44 +126,58 @@ adminRouter.post('/deleteQuestions', (req, res) => {
     })
 })
 
+adminRouter.get('/examInterface', (req, res) => {
+    dataModule.getAllQuestion().then((questions)=>{
+        console.log(questions);
+        res.render('examInterface', {questions})
+    }).catch(error =>{
+       
+     res.json(2)
+        
+    })
+});
 
-// adminRouter.get('/logout', (req, res) => {
-//     req.session.destroy()
-//     res.redirect('/login')
+
+// register page handler
+// adminRouter.get('/addStudent', (req, res)=>{
+//     res.render('addStudent')
+// })
+
+// // register page handler
+// adminRouter.post('/addStudent', (req, res)=>{
+//     console.log(req.body);
+//    //this is the register post handler
+//    //1 means user registered successfully //  res.json(1)
+//    //2 means data error // res.json(2)
+//    //3 means user exists
+//    //4 means server error
+//     const studentName = req.body.studentName
+//     const email = req.body.email
+//     const password = req.body.password
+    
+//     if(studentName && email && password ){
+//         dataModule.registerStudent(studentName.trim(),email.trim(),password,req.session.user._id).then(()=>{
+//         res.json(1)
+//         }).catch(error=>{
+//             console.log(error);
+//             if(error == 'exist'){
+//                 res.json(3)
+//             } else{
+//                 res.json(4)
+//             }
+            
+//         })
+//     } else{
+//         res.json(2)
+//     }
+    
 // });
 
-// register page handler
-adminRouter.get('/addStudent', (req, res)=>{
-    res.render('addStudent')
-})
-
-// register page handler
-adminRouter.post('/addStudent', (req, res)=>{
-    console.log(req.body);
-   //this is the register post handler
-   //1 means user registered successfully //  res.json(1)
-   //2 means data error // res.json(2)
-   //3 means user exists
-   //4 means server error
-    const studentName = req.body.studentName
-    const email = req.body.email
-    const password = req.body.password
-    
-    if(studentName && email && password ){
-        registerStudentDataModule.registerStudent(studentName.trim(),email.trim(),password,req.session.user._id).then(()=>{
-        res.json(1)
-        }).catch(error=>{
-            console.log(error);
-            if(error == 'exist'){
-                res.json(3)
-            } else{
-                res.json(4)
-            }
-            
-        })
-    } else{
-        res.json(2)
-    }
+adminRouter.get('/exam/:qid/questions', (req, res) => {
+    const quizId = req.params['qid']
+    dataModule.findQuestionsForQuiz(quizId).then(questions => {
+        res.json(questions)
+    })
     
 });
 

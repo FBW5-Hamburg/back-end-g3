@@ -8,7 +8,6 @@ const path = require('path')
 //include data Module
 
 const dataModule = require('./modules/mongooseDataModule')
-const registerDataModule = require('./modules/registerDataModule')  
 
 const adminRouter = require('./routes/adminRoute')
 
@@ -63,16 +62,70 @@ app.get('/', (req, res)=>{
     dataModule.getAllQuestion().then((questions)=>{
         console.log(questions);
         const options= questions
-        res.render('main2' , {options: JSON.stringify( options)})
+        res.json(questions)
+        // res.render('main2' , {options: JSON.stringify( options)})
     }).catch(error =>{
        
-     res.json(2)
+     console.log(error);
         
     })
     
     
 });
  
+app.get('/exam', (req, res)=>{
+    // const options = [
+    //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
+    //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
+    //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
+    //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
+    //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
+    // ];
+
+    dataModule.findAllQuizzes().then(allQuizes => {
+        res.json(allQuizes)
+    })
+    
+    console.log(req.params);
+    // dataModule.getAllQuestion().then((questions)=>{
+    //     console.log(questions);
+    //     const options= questions
+    //     res.render('main2' , {options: JSON.stringify( options)})
+    // }).catch(error =>{
+       
+    //  console.log(error);
+        
+    // })
+    
+    
+});
+app.get('/exam/:examId', (req, res)=>{
+    // const options = [
+    //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
+    //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
+    //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
+    //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
+    //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
+    // ];
+
+    dataModule.findQuizById(req.params['examId']).then( quiz =>{
+        res.json(quiz)
+    })
+    
+    console.log(req.params);
+    // dataModule.getAllQuestion().then((questions)=>{
+    //     console.log(questions);
+    //     const options= questions
+    //     res.render('main2' , {options: JSON.stringify( options)})
+    // }).catch(error =>{
+       
+    //  console.log(error);
+        
+    // })
+    
+    
+});
+
 // register page handler
 app.get('/registerUser', (req, res)=>{
     res.render('registerUser')
@@ -91,7 +144,7 @@ app.post('/registerUser', (req, res)=>{
     const password = req.body.password
     const passwordRep = req.body.passwordRep
     if(email && password && password == passwordRep){
-        registerDataModule.registerUser(username.trim(),email.trim(),password).then(()=>{
+        dataModule.registerUser(username.trim(),email.trim(),password).then(()=>{
         res.json(1)
         }).catch(error=>{
             console.log(error);
@@ -125,7 +178,7 @@ app.get('/login', (req, res)=>{
 app.post('/login', (req, res) => {
     console.log(req.body);
     if (req.body.email && req.body.password) {
-        registerDataModule.checkUser(req.body.email.trim(),req.body.password).then(user => {
+        dataModule.checkUser(req.body.email.trim(),req.body.password).then(user => {
             
             req.session.user = user
             console.log(req.session.user);
@@ -144,6 +197,19 @@ app.post('/login', (req, res) => {
 });
 
 
+
+app.get('/showExam', (req, res) => {
+    
+    
+    dataModule.createExam().then((exam)=>{
+        console.log(exam);
+        res.json(exam)
+    }).catch(error =>{
+       
+     res.json(2)
+        
+    })
+});
 
 app.listen(3000, ()=>{
     console.log('App is listening on port 3000!');
