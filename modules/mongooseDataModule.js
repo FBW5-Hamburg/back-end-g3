@@ -176,6 +176,30 @@ function addQuestion(question, answer, ch1, ch2, ch3, userId) {
 }
 
 // get the question from the database
+// function getQuestion(id) {
+    
+//         connectFcn().then(() => {
+
+//             Questions.findOne({
+//                 _id: id
+//             }).then(question => {
+
+//                 if (question) {
+//                     //question.id = question._id
+//                     return(question)
+//                 } else {
+//                     return(new Error("can not find a question with this id:" + id))
+//                 }
+//             }).catch(error => {
+//                 return(error)
+//             })
+//         }).catch(error => {
+//             return(error)
+//         })
+    
+
+// }
+
 function getQuestion(id) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
@@ -199,7 +223,24 @@ function getQuestion(id) {
     })
 
 }
+function getQuestions(ids) {
+    return new Promise((resolve, reject) => {
+        connectFcn().then(() => {
 
+            Questions.find({
+                _id: {$in : ids}
+            }).then(questions => {
+
+                resolve(questions)
+            }).catch(error => {
+                reject(error)
+            })
+        }).catch(error => {
+            reject(error)
+        })
+    })
+
+}
 // this function gets all the questions from the admin
 function getAllQuestion() {
     return new Promise((resolve, reject) => {
@@ -310,7 +351,7 @@ function deleteQuestion(questionid, userId) {
 }
 
 function findQuestionsForQuiz(qzid) {
-    Questions.filter(q => q.quizId == qzid)
+    Questions.filter(q => q._id == qzid)
 }
 
 
@@ -320,20 +361,20 @@ function findQuestionsForQuiz(qzid) {
 /////////////////////////////////////////////////////////////////
 /////////////////////     EXAMS  FUNCTIONS        ////////////////////
 /////////////////////////////////////////////////////////////////
-function createExam(questionsIds) {
+function createExam(examTitle,questionsIds) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
 
 
             
                 const newExam = new Exams({
-                title: 'quiz 1',
+                title: examTitle,
                 questions: questionsIds
 
             })
 
             newExam.save().then((exam) => {
-                resolve(exam)
+                resolve()
             }).catch(error => {
                 if (error.code === 11000) {
                     reject('exist')
@@ -352,6 +393,60 @@ function createExam(questionsIds) {
     })
 }
 
+// this function gets all the exams from the admin
+function getAllExams() {
+    return new Promise((resolve, reject) => {
+        connectFcn().then(() => {
+            Exams.find().then(exam => {
+                if (exam) {
+                    resolve(exam)
+                } else {
+                    reject(new Error("can not find this exam"))
+                }
+
+            }).catch(error => {
+                reject(error)
+            })
+
+        }).catch(error => {
+            reject(error)
+        })
+
+    })
+}
+
+function getExam(examId) {
+    return new Promise((resolve, reject) => {
+        connectFcn().then(() => {
+            //const db = client.db('test1')
+            Exams.findOne({_id: examId}).then(foundExam => {
+                //console.log(foundExam);
+                //client.close()
+
+                
+                if (foundExam) {
+                    
+                    
+                    
+                    resolve(foundExam)
+                    
+                    
+                    
+                } else {
+                    reject(new Error('can not find an exam with this id: ' + id))
+                }
+            }).catch(error => {
+                //client.close()
+                reject(error);
+            })
+
+        }).catch(error => {
+            reject(error);
+
+        })
+
+    })
+}
 
 
 /////////////////////////////////////////////////////////////////
@@ -429,9 +524,13 @@ module.exports = {
     updatedQuestions,
     getAllQuestion,
     deleteQuestion,
+    getQuestions,
 
     ////   exams exports    ////
     createExam,
+    getAllExams,
+    getExam,
+    findQuestionsForQuiz,
 
     ////   users exports    ////
     registerUser,

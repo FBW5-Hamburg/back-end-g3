@@ -26,7 +26,8 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="examTitle">Title</label>
-                        <input type="text" class="form-control" id="examTitle" placeholder="Pierre" required>
+                        <input type="text" class="form-control" id="examTitle" placeholder="Please enter the exam title"
+                            required>
 
                     </div>
 
@@ -65,12 +66,13 @@
                         <br>
                         <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=_id%>">Edit</a> -->
 
-                        <button class="btn btn-success mt-3 editBtn" questionid="<%=questions[i]._id%>">edit
-                            Now</button>
-                        <br>
-                        <!-- <button class="btn btn-success mt-3 deleteBtn" deleteQuestionId ="< = questions[i]._id %>" >delete</button>-->
-                        <a href="#" class="btn btn-success mt-3 showDeleteModalBtn"
-                            deleteQuestionId="<%= questions[i]._id %>">delete</a>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input checkBoxInp" qid="<%-questions[i].id%>">
+                            <label class="form-check-label" for="checkBoxInp">Add this question</label>
+                        </div>
+
+
                         <br>
                         <br>
                     </div>
@@ -78,6 +80,8 @@
                     <% } %>
                     <br>
                 </div>
+
+                <button class="btn btn-success mt-3" id="saveBtnExam">Save this exam</button>
 
                 <div class="text-muted">
                     <span id="answer"></span>
@@ -129,95 +133,45 @@
     <%- include('partials/htmlJsFooter') %>
 
     <script>
-        // edit the question content
-        document.querySelectorAll('.editBtn').forEach(element => {
-            element.addEventListener('click', e => {
-                e.preventDefault()
-                // alert(e.target.getAttribute('questionid'))
-                const questionid = e.target.getAttribute('questionid')
-
-                const question = e.target.parentElement.querySelector('.questionInp').value
-                const choice1 = e.target.parentElement.querySelector('.choiceInp1').value
-                const choice2 = e.target.parentElement.querySelector('.choiceInp2').value
-                const choice3 = e.target.parentElement.querySelector('.choiceInp3').value
-                const answer = e.target.parentElement.querySelector('.answerInp').value
-
-                //NOTE this are the names of the parameters that i send to the body (check :adminRouter edit question post)
-                const sentQuestion = {
-                    question,
-                    choice1,
-                    choice2,
-                    choice3,
-                    answer,
-                    questionid
-                };
-                console.log(sentQuestion);
-                fetch('/admin/editQuestions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                        //'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: JSON.stringify(sentQuestion)
-
-                }).then(response => {
-                    console.log(response);
-
-                    if (response.status == 200) {
-                        response.json().then(data => {
-                            console.log(data);
-                            if (data === 1) {
-                                alert("successfully updated")
-                            } else {
-                                alert('server error')
-                            }
-                        }).catch(error => {
-                            console.log(error);
-                            alert("something went wrong")
-                        })
-                    }
-                }).catch(error => {
-                    console.log(error);
-                    alert("can not send data")
-                })
-
-            })
-        })
-
-
-        // delete the question content
-        let deleteQuestionId;
-        document.querySelectorAll('.showDeleteModalBtn').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.preventDefault()
-                $('#deleteConfirmModule').modal('show')
-                deleteQuestionId = e.target.getAttribute('deleteQuestionId');
-
-            })
-        });
-        document.querySelector('#deleteQuestionBtn').addEventListener('click', e => {
+        // Save the exam
+        document.querySelector('#saveBtnExam').addEventListener('click', e => {
             e.preventDefault()
-            fetch('/admin/deleteQuestions', {
+            const examTitle = document.querySelector('#examTitle')
+            const checkedBoxes = document.querySelectorAll('.checkBoxInp[type=checkbox]:checked')
+            const selectedQuestionsIds = []
+            checkedBoxes.forEach(box => {
+                selectedQuestionsIds.push(box.getAttribute('qid'))
+            })
+
+            const sentExam = {
+                examTitle: examTitle.value,
+                selectedQuestionsIds
+            }
+
+            fetch('/admin/examInterface', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    deleteQuestionId
-                })
+                body: JSON.stringify(sentExam)
             }).then(response => {
-                //hide the delete confirmation modal
-                $('#deleteConfirmModule').modal('hide')
+                console.log(response);
                 if (response.status == 200) {
                     response.json().then(data => {
-                        if (data === 1) {
-                            document.querySelector('a[deleteQuestionId="' + deleteQuestionId +
-                                '"]').parentElement.remove()
-                            //const deleteQuestionId= e.target.getAttribute('deleteQuestionId').parentElement.remove()        
-                            //document.querySelector('.deleteBtn').parentElement.remove()
-                            document.querySelector('deleteQuestionId').parentElement.remove()
-                        } else {
-                            alert("can not be deleted")
+                        switch (data) {
+                            case 1:
+                                alert("this Exam successfully saved")
+                                break;
+
+                            case 2:
+                                alert("Please enter the exam title")
+                                break;
+                            case 3:
+                                alert("This Exam is already exist")
+                                break;
+                            case 4:
+                                alert("server error")
+                                break;
                         }
                     }).catch(error => {
                         alert("server side error, please contact the web admin")
@@ -225,9 +179,11 @@
                 } else {
                     alert("can not connect to the server")
                 }
+
             }).catch(error => {
-                alert("can not connect to the server")
+                console.log(error);
             })
+
         })
     </script>
 
