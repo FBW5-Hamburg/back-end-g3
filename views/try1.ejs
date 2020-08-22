@@ -21,47 +21,47 @@
                     
                     
                     
-                    <% for(let i= 0; i < questions.length; i++){%>
+                    
                     <div id="quiz" class=" quizContainer p-2">
 
                         <div class="question">
 
-                            <h3><span class="label label-warning" id="qid"><%=i+1%></span>
+                            <h3>
                                 <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
                                 <input type="text"  class="questionInp"
-                                    value="<%= questions[i].Q %>">
+                                    value="<%= exams.title %>">
                             </h3>
                         </div>
                         <ul>
 
                             <li>
                                 <input type="text"  class="choiceInp1" name="selector"
-                                    value="<%=questions[i].C[0]%>">
+                                    value="<%=exams.questions[0]%>">
 
                             </li>
 
                             <li>
                                 <input type="text"  class="choiceInp2" name="selector"
-                                    value="<%=questions[i].C[1]%>">
+                                    value="<%=exams.questions[1]%>">
 
                             </li>
                             <li>
                                 <input type="text"  class="choiceInp3" name="selector"
-                                    value="<%=questions[i].C[2]%>">
+                                    value="<%=exams.questions[2]%>">
                             </li>
                         </ul>
-                        <div class="col-xs-6 col-xs-offset-3">
+                        <!-- <div class="col-xs-6 col-xs-offset-3">
                             <label for="correctAnswer" style="color: black;">Correct Answer: </label>
                             
-                            <input type="number"  class="form-control answerInp" value="<%= questions[i].A %>">
-                        </div>
+                            <input type="number"  class="form-control answerInp" value="">
+                        </div> -->
                         <br>
                         <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=_id%>">Edit</a> -->
 
-                        <button class="btn btn-success mt-3 editBtn" questionid="<%=questions[i]._id%>" >edit Now</button>
+                        <button class="btn btn-success mt-3 editBtn"  >edit Now</button>
                         <br>
                         <!-- <button class="btn btn-success mt-3 deleteBtn" deleteQuestionId ="< = questions[i]._id %>" >delete</button>-->
-                        <a href="#" class="btn btn-success mt-3 showDeleteModalBtn" deleteQuestionId ="<%= questions[i]._id %>" >delete</a> 
+                        <a href="#" class="btn btn-success mt-3 showDeleteModalBtn"  >delete</a> 
                        <br>
                        
                     </div>
@@ -69,16 +69,14 @@
                     <br>
                     <br>
                     <!-- <br> -->
-                    <% } %>
+                    
                     &nbsp; &nbsp; &nbsp;
                     <br>
                     <br>
                     <br>
                 </div>
 
-                <div class="text-muted">
-                    <span id="answer"></span>
-                </div>
+               
 
             </div>
         </div>
@@ -102,7 +100,7 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModule">
+    <!-- <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModule">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
@@ -120,11 +118,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <%- include('partials/htmlJsFooter') %>
 
-    <script>
+    <!-- <script>
 
 // edit the question content
         document.querySelectorAll('.editBtn').forEach(element => {
@@ -137,7 +135,7 @@
                     const choice1 = e.target.parentElement.querySelector('.choiceInp1').value
                     const choice2 = e.target.parentElement.querySelector('.choiceInp2').value
                     const choice3 = e.target.parentElement.querySelector('.choiceInp3').value
-                    const answer = e.target.parentElement.querySelector('.answerInp').value
+                    // const answer = e.target.parentElement.querySelector('.answerInp').value
 
 //NOTE this are the names of the parameters that i send to the body (check :adminRouter edit question post)
                     const sentQuestion = {
@@ -145,11 +143,11 @@
                         choice1,
                         choice2,
                         choice3,
-                        answer,
+                        // answer,
                         questionid
                     };
                     console.log(sentQuestion);
-                    fetch('/admin/editQuestions', {
+                    fetch('/exam', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -194,7 +192,7 @@ let deleteQuestionId;
         });
         document.querySelector('#deleteQuestionBtn').addEventListener('click', e => {
             e.preventDefault()
-            fetch('/admin/deleteQuestions', {
+            fetch('/exam', {
                 method: 'POST',
                 headers: {
                     'Content-Type':'application/json'
@@ -206,7 +204,7 @@ let deleteQuestionId;
                 if (response.status == 200) {
                     response.json().then(data => {
                         if (data === 1) {
-                            document.querySelector('a[deleteQuestionId="' + deleteQuestionId + '"]').parentElement.remove()
+                            document.querySelector('a[deleteQuestionId="' + deleteQuestionId + '"]').parentElement.parentElement.remove()
                             
                              //const deleteQuestionId= e.target.getAttribute('deleteQuestionId').parentElement.remove()        
                             //document.querySelector('.deleteBtn').parentElement.remove()
@@ -225,7 +223,7 @@ let deleteQuestionId;
             })
         })
     </script>
-    
+     -->
 
 </body>
 

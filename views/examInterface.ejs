@@ -14,27 +14,32 @@
 
 <body>
     <div class="container ">
-        <div class="row"><br>
+        <!-- <div class="row"><br>
             <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
                     <img
                         src="https://lh4.googleusercontent.com/fLEIj3iQb7O1FhjOpLFbJtHmsMlLGmLynSWUvAP70qF0HLEBty-FANvwweg7Sv2XqSpzOKNI=w1366-h638"></a>
             </span>
-        </div>
-        <div class=" row"><br><br>
-            <div class="col-sm-8 col-sm-offset-2">
-                <div class="loader row">
+        </div> -->
+        <div><br><br>
+            <div class="col-md-4 mb-3">
+                <label for="examTitle">Title</label>
+                <input type="text" class="form-control" id="examTitle" placeholder="Please enter the exam title"
+                    required>
 
-                    <div class="col-md-4 mb-3">
+            </div>
+            <div>
+                <div class="loader ">
+
+
+
+
+                    <!-- <div style="height: 20px;">
                         <label for="examTitle">Title</label>
-                        <input type="text" class="form-control" id="examTitle" placeholder="Please enter the exam title"
+                        <input type="text"  id="examTitle" placeholder="Please enter the exam title"
                             required>
 
-                    </div>
+                    </div> -->
 
-
-                    <br><br>
-                    <br>
-                    <br>
                     <% for(let i= 0; i < questions.length; i++){%>
                     <div id="quiz" class=" col-md-3 quizContainer ">
 
@@ -42,7 +47,7 @@
 
                             <h3><span class="label label-warning" id="qid"><%=i+1%></span>
                                 <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
-                                <input type="text" class="" value="<%= questions[i].Q %>">
+                                <input type="text" class="questionInp" value="<%= questions[i].Q %>">
                             </h3>
                         </div>
                         <ul>
@@ -81,12 +86,15 @@
                     <br>
                 </div>
 
-                <button class="btn btn-success mt-3" id="saveBtnExam">Save this exam</button>
+                <br>
+                <br>
 
-                <div class="text-muted">
+                <button class="btn btn-success mt-3 " id="saveBtnExam">Save this exam</button>
+
+                <!-- <div class="text-muted">
                     <span id="answer"></span>
-                </div>
-
+                </div> -->
+                <br> <br> <br>
             </div>
         </div>
         <div class="row">

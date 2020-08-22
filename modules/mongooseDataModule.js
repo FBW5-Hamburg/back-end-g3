@@ -263,26 +263,26 @@ function getAllQuestion() {
     })
 }
 
-function findQuesions() {
-    return new Promise((resolve, reject) => {
-        connectFcn().then(() => {
-            Questions.find().then(questions => {
-                if (questions) {
-                    resolve(questions)
-                } else {
-                    reject(new Error("can not find this questions"))
-                }
+// function findQuesions() {
+//     return new Promise((resolve, reject) => {
+//         connectFcn().then(() => {
+//             Questions.find().then(questions => {
+//                 if (questions) {
+//                     resolve(questions)
+//                 } else {
+//                     reject(new Error("can not find this questions"))
+//                 }
 
-            }).catch(error => {
-                reject(error)
-            })
+//             }).catch(error => {
+//                 reject(error)
+//             })
 
-        }).catch(error => {
-            reject(error)
-        })
+//         }).catch(error => {
+//             reject(error)
+//         })
 
-    })
-}
+//     })
+// }
 // this function is for editing the questions , choices and answer
 function updatedQuestions(question, answer, ch1, ch2, ch3, questionid, userId) {
     return new Promise((resolve, reject) => {
@@ -350,14 +350,27 @@ function deleteQuestion(questionid, userId) {
     })
 }
 
-function findQuestionsForQuiz(qzid) {
-    Questions.filter(q => q._id == qzid)
+function deleteQuestionExam(questionid) {
+    return new Promise((resolve, reject) => {
+        getQuestion(questionid).then(question => {
+            
+                Questions.deleteOne({
+                    _id: questionid
+                }).then(() => {
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            
+
+
+
+
+        }).catch(error => {
+            reject(error)
+        })
+    })
 }
-
-
-
-
-
 /////////////////////////////////////////////////////////////////
 /////////////////////     EXAMS  FUNCTIONS        ////////////////////
 /////////////////////////////////////////////////////////////////
@@ -525,12 +538,12 @@ module.exports = {
     getAllQuestion,
     deleteQuestion,
     getQuestions,
-
+    deleteQuestionExam,
     ////   exams exports    ////
     createExam,
     getAllExams,
     getExam,
-    findQuestionsForQuiz,
+    
 
     ////   users exports    ////
     registerUser,

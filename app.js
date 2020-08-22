@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
         console.log(questions);
         const options = questions
         // res.json(questions)
-        res.render('main2', {
+        res.render('main', {
             options: JSON.stringify(options)
         })
     }).catch(error => {
@@ -73,40 +73,10 @@ app.get('/', (req, res) => {
         console.log(error);
 
     })
-
-
 });
 
-// app.get('/exam', (req, res) => {
-//     // const options = [
-//     //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
-//     //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
-//     //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
-//     //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
-//     //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
-//     // ];
-
-//     dataModule.findAllQuizzes().then(allQuizes => {
-//         res.json(allQuizes)
-//     })
-
-//     console.log(req.params);
-//     // dataModule.getAllQuestion().then((questions)=>{
-//     //     console.log(questions);
-//     //     const options= questions
-//     //     res.render('main2' , {options: JSON.stringify( options)})
-//     // }).catch(error =>{
-
-//     //  console.log(error);
-
-//     // })
-
-
-// });
-
-
 app.get("/getAllExams", (req, res) => {
-    
+
     // you have to get all the exames from db and send them to the ejs file and render it
     dataModule.getAllExams().then((exams) => {
         // console.log(questions);
@@ -118,17 +88,12 @@ app.get("/getAllExams", (req, res) => {
         res.json(2)
 
     })
-    // , examId:JSON.stringify(exams.id)
+
 });
 
-// app.get('/getAllExams/:examId%>', (req, res) => {
-//     console.log(req.url);
-//     res.render('allExams', {
-//         examId:JSON.stringify(req.url)
-//     })
-// });
-app.get('/exam/:examId', (req, res) => {
-    
+
+app.get('/showExam/:examId', (req, res) => {
+
     // 1- get the exam bu id
     //2- send the quistions to the ejs file
     //3- render it
@@ -140,41 +105,112 @@ app.get('/exam/:examId', (req, res) => {
     */
     //console.log(req.params.examId);
     const examId = req.params.examId
-    
+
     dataModule.getExam(examId).then(exam => {
-        
+
         dataModule.getQuestions(exam.questions).then(questions => {
-            exam.questions = questions
-            res.json(exam)
+            // exam.questions = questions
+            // res.json(exam)
+            // const options = questions
+            // res.json(questions)
+            // res.json(exam)
+            res.render('getExam', {
+                exams:questions,
+                exam:exam
+            })
+            
         }).catch(error => {
-            res.json('2')
+            res.json(error)
         })
-        // exam.questions.forEach(questions => {
-        //     dataModule.getQuestion(questions).then((question) => {
-        //         q.push(question)
-        //         console.log(q)
-        //     }).catch(error => {
-        //         console.log(error);
-        //     })
-        // });
-        
-        // for (let i = 0; i < exam.questions.length; i++) {
-        //     dataModule.getQuestion(exam.questions[i]).then((question) => {
-        //         q.push(question)
-        //         console.log(q)
-        //     }).catch(error => {
-        //         console.log(error);
-        //     })
 
-        // }
-        //console.log(q)
-
+       
 
     }).catch(error => {
         res.json('this Exam doesnt exist');
     })
 })
 
+app.get('/exam/:examId', (req, res) => {
+
+    // 1- get the exam bu id
+    //2- send the quistions to the ejs file
+    //3- render it
+    /*
+    {[
+        quistion1:
+    
+    ]}
+    */
+    //console.log(req.params.examId);
+    const examId = req.params.examId
+
+    dataModule.getExam(examId).then(exam => {
+
+        dataModule.getQuestions(exam.questions).then(questions => {
+            // exam.questions = questions
+            // res.json(exam)
+            // const options = questions
+            // res.json(questions)
+            // res.json(exam)
+            res.render('main', {
+                options: JSON.stringify(questions),
+                question:questions
+            })
+            
+        }).catch(error => {
+            res.json(error)
+        })
+
+       
+
+    }).catch(error => {
+        res.json('this Exam doesnt exist');
+    })
+})
+
+app.post('/editQuestions', (req, res) => {
+    console.log(req.body)
+
+    //NOTE check the note in the editQuestion ejs the name of the parameters are given there
+    const newQuestion = req.body.question
+    const newAnswer = req.body.answer
+    const newChoice1 = req.body.choice1
+    const newChoice2 = req.body.choice2
+    const newChoice3 = req.body.choice3
+    const questionid = req.body.questionid
+    // const examTitle = req.body.examTitle
+
+    if (newQuestion && newAnswer && newChoice1 && newChoice2 && newChoice3 && questionid ) {
+
+        dataModule.updatedQuestions(newQuestion, newAnswer, newChoice1, newChoice2, newChoice3, questionid).then(() => {
+
+            res.json(1)
+        }).catch(error => {
+
+            if (error == 3) {
+                res.json(3)
+            }
+        })
+    } else {
+        res.json(2)
+    }
+
+})
+
+/// delete question handler 
+
+app.post('/deleteQuestions', (req, res) => {
+    console.log(req.body)
+
+    const deleteQuestionId = req.body.deleteQuestionId
+
+    dataModule.deleteQuestionExam(deleteQuestionId).then(() => {
+        res.json(1)
+    }).catch(error => {
+        res.json(2)
+        console.log(error);
+    })
+})
 // app.get('/exam/:examId', (req, res) => {
 //     // const options = [
 //     //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},

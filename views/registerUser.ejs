@@ -187,9 +187,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 				postData('/registerUser', registerData).then(data => {
 					console.log(data);
+					username.value = ''
+					email.value = ''
+					password.value = ''
+					passwordRep.value = ''
+					agreeCheck.checked = false
+
+					alert('Successfull registration')
+
 				})
 			} else {
-				alert('wrong')
+				alert(checkValidation.message)
 			}
 		})
 

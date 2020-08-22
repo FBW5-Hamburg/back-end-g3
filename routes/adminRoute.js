@@ -128,6 +128,7 @@ adminRouter.post('/deleteQuestions', (req, res) => {
         res.json(1)
     }).catch(error => {
         res.json(2)
+        console.log(error);
     })
 })
 
@@ -203,13 +204,13 @@ adminRouter.post('/examInterface', (req, res) => {
 
 // });
 
-adminRouter.get('/exam/:qid/questions', (req, res) => {
-    const quizId = req.params['qid']
-    dataModule.findQuestionsForQuiz(quizId).then(questions => {
-        res.json(questions)
-    })
+// adminRouter.get('/exam/:qid/questions', (req, res) => {
+//     const quizId = req.params['qid']
+//     dataModule.findQuestionsForQuiz(quizId).then(questions => {
+//         res.json(questions)
+//     })
 
-});
+// });
 
 
 

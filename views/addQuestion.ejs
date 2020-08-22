@@ -1,70 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <%- include('partials/htmlJs') %> 
+    <%- include('partials/htmlJs') %>
 
     <%- include('partials/adminCss') %>
 
     <title>Document</title>
 </head>
+
 <body>
     <div class="container">
         <div class="row"><br>
-            <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
+            <!-- <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
 	           <img src="https://lh4.googleusercontent.com/fLEIj3iQb7O1FhjOpLFbJtHmsMlLGmLynSWUvAP70qF0HLEBty-FANvwweg7Sv2XqSpzOKNI=w1366-h638"></a>
-	        </span>
+	        </span> -->
         </div>
         <div class="row"><br><br>
-            <div class="col-sm-8 col-sm-offset-2">
+            <div class="col-sm-8 ">
                 <div class="loader">
-                    <div class="col-xs-3 col-xs-offset-5">
+                    <!-- <div class="col-xs-3 col-xs-offset-5">
                         <div id="loadbar" style="display: none;">
                             <img src="https://8finatics.s3.amazonaws.com/static/reload_emi.gif" alt="Loading" class="center-block loanParamsLoader" >
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div id="quiz">
-                  
+                    <div id="quiz" style="background-color: rgb(12, 49, 12);
+                    border-radius: 15% 0 55px 55px;">
+
                         <div class="question">
                             <h3><span class="label label-warning" id="qid">1</span>
-                            <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
-                            <input type="text" id ="question" placeholder=" insert your question here ">
+                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+                                <input type="text" id="question" placeholder=" Please Insert your question here "
+                                    style="width: 50vw; height: 8vh;">
                             </h3>
                         </div>
                         <ul>
-                          <li>
-                            <input type="text" id="f-option" name="selector" value="1." >
-                        
-                          </li>
-                          
-                          <li>
-                            <input type="text" id="s-option" name="selector" value="2.">
-                            
-                          </li>
-                          
-                          <li>
-                            <input type="text" id="t-option" name="selector" value="3.">
-                          
-                          </li>
+                            <li>
+                                <input type="text" id="f-option" name="selector" value="1.  ">
+
+                            </li>
+
+                            <li>
+                                <input type="text" id="s-option" name="selector" value="2.  ">
+
+                            </li>
+
+                            <li>
+                                <input type="text" id="t-option" name="selector" value="3.  ">
+
+                            </li>
                         </ul>
-                        <input type="number" id ="answer"placeholder="correct answer">
-                    <button class="btn btn-success mt-3" id="questionSaveBtn">Save Now</button>
+                        <input type="number" id="answer" placeholder="correct answer">
+                        <br> <br>
+                        <button class="btn btn-success mt-3" id="questionSaveBtn">Save Now</button>
                     </div>
                 </div>
                 <div class="text-muted">
                     <span id="answer"></span>
                 </div>
-                
+
             </div>
         </div>
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div id="result-of-question" class="pulse animated" style="display: none;">
                     <span id="totalCorrect" class="pull-right"></span>
-                    <table class="table table-hover table-responsive" >
+                    <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
                                 <th>Question No.</th>
@@ -79,31 +84,30 @@
             </div>
         </div>
     </div>
-    
-    <%- include('partials/htmlJsFooter') %> 
-<script>
 
-// connect the save btn 
-document.querySelector('#questionSaveBtn').addEventListener('click', e =>{
-    e.preventDefault()
-// get the data of the input values 
-const question = document.querySelector('#question').value
-const choice1 = document.querySelector('#f-option').value
-const choice2 = document.querySelector('#s-option').value
-const choice3 = document.querySelector('#t-option').value
-const answer = document.querySelector('#answer').value
+    <%- include('partials/htmlJsFooter') %>
+    <script>
+        // connect the save btn 
+        document.querySelector('#questionSaveBtn').addEventListener('click', e => {
+            e.preventDefault()
+            // get the data of the input values 
+            const question = document.querySelector('#question')
+            const choice1 = document.querySelector('#f-option')
+            const choice2 = document.querySelector('#s-option')
+            const choice3 = document.querySelector('#t-option')
+            const answer = document.querySelector('#answer')
 
-const sentQuestion = {
-    question, 
-    choice1,
-    choice2,
-    choice3, 
-    answer
-}
- 
-console.log(sentQuestion);
+            const sentQuestion = {
+                question : question.value,
+                choice1 : choice1.value,
+                choice2 : choice2.value,
+                choice3 : choice3.value,
+                answer : answer.value
+            }
 
-fetch('/admin/addQuestion', {
+            console.log(sentQuestion);
+
+            fetch('/admin/addQuestion', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,12 +119,19 @@ fetch('/admin/addQuestion', {
                 if (response.status == 200) {
                     response.json().then(data => {
                         console.log(data);
-                        switch(data) {
+                        switch (data) {
                             case 1:
-                                alert("the question has been saved correctly and it will be shown")
+                                alert(
+                                    "the question has been saved correctly and it will be shown")
+                                    question.value = '',
+                                    choice1.value = '1.  ',
+                                    choice2.value = '2.  ',
+                                    choice3.value = '3.  ',
+                                    answer.value = ''
                                 break;
                             case 2:
-                                alert("Some entries is missing, make sure to enter all required data")
+                                alert(
+                                    "Some entries is missing, make sure to enter all required data")
                                 break;
                             case 3:
                                 alert("this question already exist")
@@ -134,14 +145,11 @@ fetch('/admin/addQuestion', {
                 }
             })
 
-})
-
-
-
-
-</script>
+        })
+    </script>
 
 
 
 </body>
+
 </html>

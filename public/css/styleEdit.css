@@ -1,6 +1,6 @@
 body, html{
     height: 100%;
-    background: #222222;
+    background: #668b54;
     font-family: 'Lato', sans-serif;
   }
   .image-position{
@@ -95,8 +95,8 @@ body, html{
   
   .btn-success {
       color: #fff;
-      background-color: #75ba48;
-      border-color: #75ba48;
+      background-color: #466d3e;
+      border-color: #466d3e;
       width: 100%;
       /* font-weight: 600 !important; */
       padding: 7px 10px;
@@ -108,8 +108,8 @@ body, html{
   }
   .btn-success:hover {
       color: #fff !important;
-      background-color: #2FC0AE !important;
-      border-color: #2FC0AE !important;
+      background-color: #62775e !important;
+      border-color: #466d3e !important;
   }
   form.login label, form.login a
   {
@@ -199,6 +199,7 @@ body, html{
     border-top-left-radius: 55px;
     border-top-right-radius: 55px;
     /* border-radius: .85em; */
+    border: 1px solid rgb(12, 49, 12);
   }
   
 .showDeleteModalBtn{
@@ -206,7 +207,7 @@ body, html{
     border-bottom-right-radius: 55px;
     /* border-top-right-radius: 55px; */
     /* border-radius: .100em; */
-
+    border: 1px solid rgb(12, 49, 12);
 }
 
   /* #deleteQuestionBtn {
@@ -221,11 +222,12 @@ body, html{
       width: 135%;
   }
   .question{
-      background: #75ba48;
+      background: #466d3e;
       padding: 20px;
       color: rgba(24, 23, 23, 0.753);
       border-bottom-right-radius: 55px;
       border-top-left-radius: 55px;
+      border: 1px solid rgb(12, 49, 12);
   }
   
   #qid{
@@ -242,12 +244,14 @@ body, html{
   
   ul li{
     color: #3d3c3c;
+    /* background-color: #00ff005d; */
+  
     display: block;
     position: relative;
     float: left;
     width: 100%;
-    height: 100px;
-    border-bottom: 1px solid #111111;
+    height: 80px;
+    
   }
   
 
@@ -255,6 +259,19 @@ body, html{
    width: 100%;
    
   }
+
+  .questionInp{
+    width: 100%;
+    
+   }
+
+   .answerInp{
+    width: 50%;
+    text-align: center;
+    
+    
+    
+   }
 
   ul li input[type=radio]{
     position: absolute;
@@ -367,6 +384,7 @@ body, html{
   /*----------riple bubble-----------------*/
   ul {
       margin: 0 auto;
+      
   }
   /*.ink styles - the elements which will create the ripple effect. The size and position of these elements will be set by the JS code. Initially these elements will be scaled down to 0% and later animated to large fading circles on user click.*/
   .ink {
@@ -385,11 +403,22 @@ body, html{
 
 
 
+  .loader {
+      display: flex;
+      width: 90vw;
+      flex-wrap: wrap;
+      flex-direction: row;
+      
+      justify-content: center;
+  }
 
   .quizContainer {
-      width: 30vw;
-      height: 30vh;
-      margin-bottom: 400px;
-      
+      width: 30%;
+      height: 50%;
+      /* margin-right: 1px; */
+      /* col-md-4 */
+      margin: 40px 30px 20px 0;
+      background-color: rgb(12, 49, 12);
+      border-radius: 15% 0 55px 55px;
+      box-shadow: 0 10px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
-  
