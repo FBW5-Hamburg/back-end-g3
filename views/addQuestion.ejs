@@ -20,7 +20,7 @@
 	        </span> -->
         </div>
         <div class="row"><br><br>
-            <div class="col-sm-8 ">
+            <div >
                 <div class="loader">
                     <!-- <div class="col-xs-3 col-xs-offset-5">
                         <div id="loadbar" style="display: none;">
@@ -85,6 +85,27 @@
         </div>
     </div>
 
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="resultModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <%- include('partials/htmlJsFooter') %>
     <script>
         // connect the save btn 
@@ -98,11 +119,11 @@
             const answer = document.querySelector('#answer')
 
             const sentQuestion = {
-                question : question.value,
-                choice1 : choice1.value,
-                choice2 : choice2.value,
-                choice3 : choice3.value,
-                answer : answer.value
+                question: question.value,
+                choice1: choice1.value,
+                choice2: choice2.value,
+                choice3: choice3.value,
+                answer: answer.value
             }
 
             console.log(sentQuestion);
@@ -121,31 +142,63 @@
                         console.log(data);
                         switch (data) {
                             case 1:
-                                alert(
-                                    "the question has been saved correctly and it will be shown")
-                                    question.value = '',
+
+                                showModal(false, "Success",
+                                    "the question has been saved correctly and it will be shown in questions gallery"
+                                    )
+                                question.value = '',
                                     choice1.value = '1.  ',
                                     choice2.value = '2.  ',
                                     choice3.value = '3.  ',
                                     answer.value = ''
                                 break;
                             case 2:
-                                alert(
-                                    "Some entries is missing, make sure to enter all required data")
+                                showModal(true, "Error",
+                                    "Some entries is missing, make sure to enter all required data"
+                                    )
+
                                 break;
                             case 3:
-                                alert("this question already exist")
+                                showModal(true, "Question title is exist",
+                                    "this question already exist, please type another question title"
+                                )
+
                                 break;
                             default:
                                 break;
                         }
+                    }).catch(error => {
+                        console.log(error);
+                        showModal(true, "error", "unknown response format")
+
                     })
                 } else {
                     console.log('error');
+                    showModal(true, "error", "could not send the data")
                 }
+            }).catch(error => {
+                console.log(error);
+                showModal(true, "error", "could not send the data")
             })
 
         })
+
+        function showModal(error, title, content) {
+            const modal = document.querySelector('#resultModal')
+            const modal_header = modal.querySelector('.modal-header')
+            const modal_body = modal.querySelector('.modal-body')
+            if (error) {
+
+                modal_header.classList.add('bg-danger')
+                modal_header.classList.remove('bg-success')
+            } else {
+                modal_header.classList.remove('bg-danger')
+                modal_header.classList.add('bg-success')
+            }
+            modal_header.innerHTML = title
+            modal_body.innerHTML = '<p>' + content + '</p>'
+            $('#resultModal').modal('show')
+        }
     </script>
 
 

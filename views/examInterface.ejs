@@ -117,21 +117,19 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModule">
+    <div class="modal" tabindex="-1" role="dialog" id="resultModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title">Are you sure?</h5>
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>This book and its related files gonna be deleted and there is no way to bring them back.</p>
+                    <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" style="background-color: red;"
-                        id="deleteQuestionBtn">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -168,31 +166,56 @@
                     response.json().then(data => {
                         switch (data) {
                             case 1:
-                                alert("this Exam successfully saved")
+                                
+                                showModal(false, "Success","this Exam successfully saved")
                                 break;
 
                             case 2:
                                 alert("Please enter the exam title")
+                                showModal(true, "Question title is missed",
+                                            "Please enter the exam title"
+                                            )
                                 break;
                             case 3:
                                 alert("This Exam is already exist")
+                                showModal(true, "exam title is exist","this exam already exist, please type another exam title")
                                 break;
                             case 4:
-                                alert("server error")
+                            showModal(true, "Server error","this exam already exist, please type another exam title")
+                                
                                 break;
                         }
                     }).catch(error => {
-                        alert("server side error, please contact the web admin")
+                        // alert("server side error, please contact the web admin")
+                        showModal(true, "error", "server side error, please contact the web admin")
                     })
                 } else {
-                    alert("can not connect to the server")
+                    // alert("can not connect to the server")
+                    showModal(true, "server error", "can not connect to the server")
                 }
 
             }).catch(error => {
-                console.log(error);
+                showModal(true, "error", "could not send the data")
             })
 
         })
+
+        function showModal(error, title, content) {
+            const modal = document.querySelector('#resultModal')
+            const modal_header = modal.querySelector('.modal-header')
+            const modal_body = modal.querySelector('.modal-body')
+            if (error) {
+
+                modal_header.classList.add('bg-danger')
+                modal_header.classList.remove('bg-success')
+            } else {
+                modal_header.classList.remove('bg-danger')
+                modal_header.classList.add('bg-success')
+            }
+            modal_header.innerHTML = title
+            modal_body.innerHTML = '<p>' + content + '</p>'
+            $('#resultModal').modal('show')
+        }
     </script>
 
 

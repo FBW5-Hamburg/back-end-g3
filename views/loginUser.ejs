@@ -57,7 +57,24 @@
 			</div>
 		</div>
 	</div>
-	
+	<div class="modal" tabindex="-1" role="dialog" id="resultModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 <!--===============================================================================================-->
 	<%- include('partials/loginJs') %> 
@@ -92,33 +109,49 @@
                                     window.location = '/admin'
                                     break;
                                 case 2:
-                                    alert("missing entries you miss some entries")
+                                    showModal(true , "missing entries" , "you miss some entries")
                                     break;
                                 case 3:
-                                    alert("login error Either the email or password is wrong")
+                                    showModal(true , "login error" , "Either the email or password is wrong")
                                     break;
                                 case 4:
-                                    alert("Server error Something unexpected happened. please ")
+                                    showModal(true , "Server error" , "Something unexpected happened. please ")
                                     break;
                                 default:
-                                alert("Server error Something unexpected happened. please ")
+                                showModal(true , "Server error" , "Something unexpected happened. please ")
                                     break;
                             }
                             
                         }).catch(error =>{
                             console.log(error);
-                            alert( "error on getting data please contact the Administrator")
+                            showModal(true , "error on getting data",'please contact the Administrator')
                             
                         }) // parses JSON response into native Javascript objects
                     }
                 }) .catch(error =>{
                         console.log(error);
-                        alert("server side error"+ error.message)
+                        showModal(true , "server side error" , error.message)
                 }) 
             }else {
-                alert("missing entries you miss some entries ")
+                showModal(true,"missing entries","you miss some entries ")
             }
 		})
+
+		function showModal(error,title,content) {
+            const modal = document.querySelector('#resultModal')
+            const modal_header = modal.querySelector('.modal-header')
+            const modal_body = modal.querySelector('.modal-body')
+            if (error) {
+                modal_header.classList.add('bg-danger')
+                modal_header.classList.remove('bg-success')
+            } else {
+                modal_header.classList.remove('bg-danger')
+                modal_header.classList.add('bg-success') 
+            }
+            modal_header.innerHTML= title
+            modal_body.innerHTML='<p>'+content+'</p>'
+            $('#resultModal').modal('show') 
+        }
 	</script>
 
 </body>

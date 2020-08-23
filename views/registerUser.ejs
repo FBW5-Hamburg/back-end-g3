@@ -74,76 +74,31 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<li></li>
 		</ul>
 	</div>
+
+
+
+	<div class="modal" tabindex="-1" role="dialog" id="resultModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
 	<!-- //main -->
 	<script>
-		// document.querySelector('#registerBtn').addEventListener('click', e => {
-		// 	e.preventDefault()
-		// 	const username = document.querySelector('#usernameInp')
-		// 	const email = document.querySelector('#emailInp')
-		// 	const password = document.querySelector('#passwordInp')
-		// 	const passwordRep = document.querySelector('#rePasswordInp')
-		// 	const agreeCheck = document.querySelector('#agree-term')
-		// 	//const formElement = document.querySelector('#signup-form')
-
-		// 	let checkValidation = {
-		// 		check: true,
-		// 		message: ''
-		// 	}
-		// 	if (!username.value.trim()) {
-
-		// 		checkValidation.check = false
-		// 		checkValidation.message = 'Name is empty \n'
-		// 	}
-		// 	if (!email.value.trim()) {
-		// 		checkValidation.check = false
-		// 		checkValidation.message += 'email is empty \n'
-		// 	}
-		// 	if (!password.value) {
-		// 		checkValidation.check = false
-		// 		checkValidation.message += 'password is empty \n'
-		// 	}
-		// 	if (password.value !== rePasswordInp.value) {
-		// 		checkValidation.check = false
-		// 		checkValidation.message += "password doesn't match the repassword  \n"
-		// 	}
-		// 	if (!agreeCheck.checked) {
-		// 		checkValidation.check = false
-		// 		checkValidation.message += 'you have to agree to the terms \n'
-		// 	}
-		// 	if (checkValidation.check) {
-		// 		const registerData = {
-		// 			username: username.value,
-		// 			email: email.value,
-		// 			password: password.value,
-		// 			passwordRep: passwordRep.value
-		// 		}
-		// 		postData("/register", registerData).then((data) => {
-		// 			console.log(data);
-		// 		});
-		// 		//send data to the server
-		// 	} else {
-
-		// 		//create object to be sent
-
-		// 	}
-
-
-		// })
-
-		// // fetch the registration data
-		// async function postData(url = "", data = {}) {
-		// 	return fetch(url, {
-		// 		method: "POST",
-		// 		headers: {
-		// 			"Content-Type": "application/json",
-		// 		},
-		// 		body: JSON.stringify(data),
-		// 	}).then(response => {
-		// 		return response.json();
-		// 	});
-
-		// }
-
+		
 		document.querySelector('#registerBtn').addEventListener('click', e => {
 			e.preventDefault()
 			const username = document.querySelector('#usernameInp')
@@ -187,32 +142,72 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 				postData('/registerUser', registerData).then(data => {
 					console.log(data);
-					username.value = ''
-					email.value = ''
-					password.value = ''
-					passwordRep.value = ''
-					agreeCheck.checked = false
+					switch (data) {
+						case 1:
+							showModal(false, "Register Success", "you can go to login page...")
+							username.value = ''
+							email.value = ''
+							password.value = ''
+							passwordRep.value = ''
+							agreeCheck.checked = false
+							break;
+						case 2:
+						showModal(true, "Server error", "Something unexpected happened. please contact the administrator")
+							break;
+						case 3:
+							showModal(true, "email is registered",
+								"this email is already registered to the file")
+							break;
+						
+						default:
+							showModal(true, "Server error", "Something unexpected happened.")
+							break;
+					}
 
-					alert('Successfull registration')
 
+					// alert('Successfull registration')
+					// showModal(false, "Success Registration",
+					// 	"this User saved correctly and it will be shown in users gallery")
+
+				}).catch(error => {
+					showModal(true, "Server error", "call the admin because of this error")
 				})
 			} else {
-				alert(checkValidation.message)
+				showModal(true, "Alert!", checkValidation.message)
+				// alert(checkValidation.message)
 			}
 		})
 
 		//fetch the registration data
-		async function postData(url = '' , data = {}) {
-			return fetch(url , {
+		async function postData(url = '', data = {}) {
+			return fetch(url, {
 				method: 'POST',
 				headers: {
-					"Content-type" : "application/json"
+					"Content-type": "application/json"
 				},
 				body: JSON.stringify(data)
 			}).then(response => {
 				return response.json()
+			}).catch(error => {
+				showModal(true , "server side error" , error.message)
 			})
 		}
+
+		function showModal(error,title,content) {
+            const modal = document.querySelector('#resultModal')
+            const modal_header = modal.querySelector('.modal-header')
+            const modal_body = modal.querySelector('.modal-body')
+            if (error) {
+                modal_header.classList.add('bg-danger')
+                modal_header.classList.remove('bg-success')
+            } else {
+                modal_header.classList.remove('bg-danger')
+                modal_header.classList.add('bg-success') 
+            }
+            modal_header.innerHTML= title
+            modal_body.innerHTML='<p>'+content+'</p>'
+            $('#resultModal').modal('show') 
+        }
 	</script>
 
 </body>

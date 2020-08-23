@@ -53,27 +53,27 @@ app.use('/admin', adminRouter);
 /// ----- END -----///
 
 // main page questionary
-app.get('/', (req, res) => {
-    // const options = [
-    //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
-    //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
-    //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
-    //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
-    //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
-    // ];
-    dataModule.getAllQuestion().then((questions) => {
-        console.log(questions);
-        const options = questions
-        // res.json(questions)
-        res.render('main', {
-            options: JSON.stringify(options)
-        })
-    }).catch(error => {
+// app.get('/', (req, res) => {
+//     // const options = [
+//     //     {'Q':'How do you write "Hello World" in an alert box?', 'A':2,'C':['msg("Hello World");','alert("Hello World");','alertBox("Hello World");']},
+//     //     {'Q':'How do you create a function in JavaScript?', 'A':3,'C':['function:myFunction()','function = myFunction()','function myFunction()']},
+//     //     {'Q':'How to write an IF statement in JavaScript?', 'A':1,'C':['if (i == 5)','if i = 5 then','if i == 5 then']},
+//     //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
+//     //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
+//     // ];
+//     dataModule.getAllQuestion().then((questions) => {
+//         console.log(questions);
+//         const options = questions
+//         // res.json(questions)
+//         res.render('main', {
+//             options: JSON.stringify(options)
+//         })
+//     }).catch(error => {
 
-        console.log(error);
+//         console.log(error);
 
-    })
-});
+//     })
+// });
 
 app.get("/getAllExams", (req, res) => {
 
@@ -168,7 +168,7 @@ app.get('/exam/:examId', (req, res) => {
     })
 })
 
-app.post('/editQuestions', (req, res) => {
+app.post('/editExam', (req, res) => {
     console.log(req.body)
 
     //NOTE check the note in the editQuestion ejs the name of the parameters are given there
@@ -199,7 +199,7 @@ app.post('/editQuestions', (req, res) => {
 
 /// delete question handler 
 
-app.post('/deleteQuestions', (req, res) => {
+app.post('/deleteExam', (req, res) => {
     console.log(req.body)
 
     const deleteQuestionId = req.body.deleteQuestionId
@@ -255,7 +255,7 @@ app.post('/registerUser', (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const passwordRep = req.body.passwordRep
-    if (email && password && password == passwordRep) {
+    
         dataModule.registerUser(username.trim(), email.trim(), password).then(() => {
             res.json(1)
         }).catch(error => {
@@ -263,13 +263,11 @@ app.post('/registerUser', (req, res) => {
             if (error == 'exist') {
                 res.json(3)
             } else {
-                res.json(4)
+                res.json(2)
             }
 
         })
-    } else {
-        res.json(2)
-    }
+    
 
 });
 
