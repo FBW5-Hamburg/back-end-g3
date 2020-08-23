@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <%- include('partials/htmlJs') %>
+
+    <link href="///maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="/css/styleEdit.css">
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row"><br>
+            <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
+                    <img
+                        src="https://lh4.googleusercontent.com/fLEIj3iQb7O1FhjOpLFbJtHmsMlLGmLynSWUvAP70qF0HLEBty-FANvwweg7Sv2XqSpzOKNI=w1366-h638"></a>
+            </span>
+        </div>
+        <div class="row"><br><br>
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="loader">
+                    <div class="col-xs-3 col-xs-offset-5">
+                        <div id="loadbar" style="display: none;">
+                            <img src="https://8finatics.s3.amazonaws.com/static/reload_emi.gif" alt="Loading"
+                                class="center-block loanParamsLoader">
+                        </div>
+                    </div>
+
+
+                    <% for(let i= 0; i < questions.length; i++){%>
+                    <div id="quiz">
+
+                        <div class="question">
+
+                            <h3><span class="label label-warning" id="qid"><%=i+1%></span>
+                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+                                <input type="text"  class="questionInp"
+                                    value="<%= questions[i].Q %>">
+                            </h3>
+                        </div>
+                        <ul>
+
+                            <li>
+                                <input type="text"  class="choiceInp1" name="selector"
+                                    value="<%=questions[i].C[0]%>">
+
+                            </li>
+
+                            <li>
+                                <input type="text"  class="choiceInp2" name="selector"
+                                    value="<%=questions[i].C[1]%>">
+
+                            </li>
+                            <li>
+                                <input type="text"  class="choiceInp3" name="selector"
+                                    value="<%=questions[i].C[2]%>">
+                            </li>
+                        </ul>
+                        <div>
+                            <input type="number"  class="answerInp" value="<%= questions[i].A %>">
+                        </div>
+                        <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=i%>">Edit</a> -->
+
+                        <button class="btn btn-success mt-3 editBtn" >edit Now</button>
+
+                    </div>
+                    <% } %>
+                </div>
+
+                <div class="text-muted">
+                    <span id="answer"></span>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div id="result-of-question" class="pulse animated" style="display: none;">
+                    <span id="totalCorrect" class="pull-right"></span>
+                    <table class="table table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Question No.</th>
+                                <th>Our answer</th>
+                                <th>Your answer</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quizResult"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/htmlJsFooter') %>
+
+    <script>
+        document.querySelectorAll('.editBtn').forEach(element => {
+            element.addEventListener('click', e => {
+                    e.preventDefault()
+                    // alert(e.target.getAttribute('questionid'))
+                    //const questionid = e.target.getAttribute('questionid')
+
+                    const question = e.target.parentElement.querySelector('.questionInp').value
+                    const choice1 = e.target.parentElement.querySelector('.choiceInp1').value
+                    const choice2 = e.target.parentElement.querySelector('.choiceInp2').value
+                    const choice3 = e.target.parentElement.querySelector('.choiceInp3').value
+                    const answer = e.target.parentElement.querySelector('.answerInp').value
+
+                    const sentQuestion = {
+                        question,
+                        answer,
+                        choice1,
+                        choice2,
+                        choice3
+                        
+                    };
+                    console.log(sentQuestion);
+//ANCHOR maybe : fetch('admin/editQuestions'
+                    fetch('/admin/editQuestions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                            //'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: JSON.stringify(sentQuestion)
+
+                    }).then(response => {
+                        console.log(response);
+
+                        if (response.status == 200) {
+                            response.json().then(data => {
+                                console.log(data);
+                                if (data === 1) {
+                                    alert("successfully updated")
+                                } else {
+                                    alert('server error')
+                                } 
+                            }).catch(error => {
+                                console.log(error);
+                                alert("something went wrong")
+                            })
+                        }
+                    }).catch(error =>{
+                            console.log(error);
+                            alert("can not send data")
+                        })
+                
+            })
+        })
+    </script>
+
+
+
+</body>
+
+</html>
