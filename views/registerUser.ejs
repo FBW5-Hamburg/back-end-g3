@@ -12,6 +12,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<title>Register Form</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 	<script type="application/x-javascript">
 		addEventListener("load", function () {
 			setTimeout(hideURLbar, 0);
@@ -140,7 +143,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					passwordRep: passwordRep.value
 				}
 
-				postData('/registerUser', registerData).then(data => {
+				postData('/', registerData).then(data => {
 					console.log(data);
 					switch (data) {
 						case 1:
@@ -150,18 +153,18 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							password.value = ''
 							passwordRep.value = ''
 							agreeCheck.checked = false
+							window.location = '/login'
+							break;
+							case 3:
+							showModal(true, "Email is registered",
+								"this email already exists")
 							break;
 						case 2:
 						showModal(true, "Server error", "Something unexpected happened. please contact the administrator")
 							break;
-						case 3:
-							showModal(true, "email is registered",
-								"this email is already registered to the file")
-							break;
 						
-						default:
-							showModal(true, "Server error", "Something unexpected happened.")
-							break;
+						
+						
 					}
 
 
@@ -193,20 +196,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			})
 		}
 
-		function showModal(error,title,content) {
+		function showModal(error, title, content) {
             const modal = document.querySelector('#resultModal')
             const modal_header = modal.querySelector('.modal-header')
             const modal_body = modal.querySelector('.modal-body')
             if (error) {
+
                 modal_header.classList.add('bg-danger')
                 modal_header.classList.remove('bg-success')
             } else {
                 modal_header.classList.remove('bg-danger')
-                modal_header.classList.add('bg-success') 
+                modal_header.classList.add('bg-success')
             }
-            modal_header.innerHTML= title
-            modal_body.innerHTML='<p>'+content+'</p>'
-            $('#resultModal').modal('show') 
+            modal_header.innerHTML = title
+            modal_body.innerHTML = '<p>' + content + '</p>'
+            $('#resultModal').modal('show')
         }
 	</script>
 

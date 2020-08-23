@@ -30,7 +30,10 @@ const questionSchema = new Schema({
     },
 
     A: {
-        type: Number
+        type: Number,
+        required: true,
+        min:1,
+        max:3
 
     },
     C: {
@@ -59,7 +62,8 @@ const examSchema = new Schema({
     },
 
     questions: {
-        type: [String]
+        type: [String],
+        required: true
     }
 
 });
@@ -242,14 +246,22 @@ function getQuestions(ids) {
 
 }
 // this function gets all the questions from the admin
-function getAllQuestion() {
+function getAllQuestion(userId) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
             Questions.find().then(questions => {
-                if (questions) {
-                    resolve(questions)
+                //console.log(questions);
+                var q = []
+                questions.forEach(question => {
+                    if (question.userid === userId) {
+                        q.push(question)
+                    }
+                })
+
+                if (q) {
+                    resolve(q)
                 } else {
-                    reject(new Error("can not find this questions"))
+                    reject(new Error("can not find this question"))
                 }
 
             }).catch(error => {

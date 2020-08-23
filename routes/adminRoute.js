@@ -76,7 +76,7 @@ adminRouter.get('/editQuestions', (req, res) => {
     //     {'Q':'How does a FOR loop start?', 'A':2,'C':['for (i = 0; i <= 5)','for (i = 0; i <= 5; i++)','for i = 1 to 5']},
     //     {'Q':'What is the correct way to write a JavaScript array?', 'A':3,'C':['var colors = "red", "green", "blue"','var colors = (1:"red", 2:"green", 3:"blue")','var colors = ["red", "green", "blue"]']}
     // ];
-    dataModule.getAllQuestion().then((questions) => {
+    dataModule.getAllQuestion(req.session.user._id).then((questions) => {
 
         res.render('editQuestions', {
             questions
@@ -133,7 +133,7 @@ adminRouter.post('/deleteQuestions', (req, res) => {
 })
 
 adminRouter.get('/examInterface', (req, res) => {
-    dataModule.getAllQuestion().then((questions) => {
+    dataModule.getAllQuestion(req.session.user._id).then((questions) => {
         //console.log(questions);
         res.render('examInterface', {
             questions

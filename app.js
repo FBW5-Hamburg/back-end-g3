@@ -239,12 +239,12 @@ app.post('/deleteExam', (req, res) => {
 // });
 
 // register page handler
-app.get('/registerUser', (req, res) => {
+app.get('/', (req, res) => {
     res.render('registerUser')
 })
 
 // register page handler
-app.post('/registerUser', (req, res) => {
+app.post('/', (req, res) => {
     console.log(req.body);
     //this is the register post handler
     //1 means user registered successfully //  res.json(1)
@@ -260,7 +260,7 @@ app.post('/registerUser', (req, res) => {
             res.json(1)
         }).catch(error => {
             console.log(error);
-            if (error == 'exist') {
+            if (error == 'exists') {
                 res.json(3)
             } else {
                 res.json(2)
