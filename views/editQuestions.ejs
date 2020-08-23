@@ -27,7 +27,7 @@
                         <div class="question">
 
                             <h3><span class="label label-warning" id="qid"><%=i+1%></span>
-                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+                                
                                 <input type="text" class="questionInp" value="<%= questions[i].Q %>">
                             </h3>
                         </div>
@@ -52,12 +52,12 @@
                             <input type="number" class="form-control answerInp" min="1" max="3" value="<%= questions[i].A %>">
                         </div>
                         <br>
-                        <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=_id%>">Edit</a> -->
+                       
 
                         <button class="btn btn-success mt-3 editBtn" questionid="<%=questions[i]._id%>">edit
                             Now</button>
                         <br>
-                        <!-- <button class="btn btn-success mt-3 deleteBtn" deleteQuestionId ="< = questions[i]._id %>" >delete</button>-->
+                       
                         <a href="#" class="btn btn-success mt-3 showDeleteModalBtn"
                             deleteQuestionId="<%= questions[i]._id %>">delete</a>
                         <br>
@@ -66,7 +66,7 @@
                     <br>
                     <br>
                     <br>
-                    <!-- <br> -->
+                    
                     <% } %>
                     &nbsp; &nbsp; &nbsp;
                     <br>
@@ -80,26 +80,11 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <div id="result-of-question" class="pulse animated" style="display: none;">
-                    <span id="totalCorrect" class="pull-right"></span>
-                    <table class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Question No.</th>
-                                <th>Our answer</th>
-                                <th>Your answer</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="quizResult"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
+
+    <!-- show modals / succes and error modals -->
     <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModule">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -140,6 +125,9 @@
         </div>
     </div>
 
+
+
+
     <%- include('partials/htmlJsFooter') %>
 
     <script>
@@ -170,7 +158,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                        //'Content-Type': 'application/x-www-form-urlencoded'
+                        //
                     },
                     body: JSON.stringify(sentQuestion)
 
@@ -192,13 +180,13 @@
                                     "call the admin because of this error")
                             }
                         }).catch(error => {
-                            //console.log(error);
+                            
                             showModal(true, "Server error", "something went wrong")
                             alert("")
                         })
                     }
                 }).catch(error => {
-                    //console.log(error);
+                    
                     showModal(true, "Error", "Could not send the data")
                 })
 
@@ -235,9 +223,7 @@
                             document.querySelector('a[deleteQuestionId="' + deleteQuestionId +
                                 '"]').parentElement.remove()
                             showModal(false, "Question ", "Question  deleted")
-                            //const deleteQuestionId= e.target.getAttribute('deleteQuestionId').parentElement.remove()        
-                            //document.querySelector('.deleteBtn').parentElement.remove()
-                            //    document.querySelector('deleteQuestionId').parentElement.remove()
+                            
                         } else {
                             showModal(true, "Error", "this question can not be deleted")
                         }

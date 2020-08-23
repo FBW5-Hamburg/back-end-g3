@@ -1,6 +1,6 @@
-/////////////////////////////////////////////////////////////////
-/////////////        CONNECT TO THE DATA BASE        ////////////
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/////////////        CONNECT TO THE DATA BASE USING MONGOOSSE       ////////////
+////////////////////////////////////////////////////////////////////////////////
 
 const mongoose = require('mongoose')
 
@@ -16,9 +16,9 @@ const Schema = mongoose.Schema
 
 
 
-//////////////////////////////////////////////////////
-/////////////        SCHEMAS              ////////////
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////         SCHEMAS              ////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 ////////  questionSchema  ///////
 
@@ -32,8 +32,8 @@ const questionSchema = new Schema({
     A: {
         type: Number,
         required: true,
-        min:1,
-        max:3
+        min: 1,
+        max: 3
 
     },
     C: {
@@ -49,13 +49,11 @@ const questionSchema = new Schema({
 
 })
 
+
 ////////   examSchema    ///////
 
 const examSchema = new Schema({
-    // exam_id: {
-    //     type: String,
-    //     required: true
-    // },
+
     title: {
         type: String,
         unique: true
@@ -68,9 +66,9 @@ const examSchema = new Schema({
 
 });
 
+
 ////////   userSchema    ///////
 
-// create a user schema for mongoDb
 const userSchema = new Schema({
 
     username: {
@@ -97,9 +95,9 @@ const userSchema = new Schema({
 
 
 
-/////////////////////////////////////////////////////////////////
-/////////////        CREATE MODELS        ////////////
-/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//////      CREATE MODELS TO CONNECT OUR SCHEMA TO THE COLLECTION     ///////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
 // connect the Question-Schema
 const Questions = mongoose.model('questions', questionSchema)
@@ -112,8 +110,17 @@ const Users = mongoose.model('users', userSchema)
 
 
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////          FUNCTIONS        /////////////////////////////
+/////////////////////////////                           /////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+
 /////////////////////////////////////////////////////////////////
-/////////////////////     CONNECT  FUNCTION        ////////////////////
+/////////////////////     CONNECT  FUNCTION        //////////////
 /////////////////////////////////////////////////////////////////
 // connect to mongoDb
 function connectFcn() {
@@ -136,7 +143,7 @@ function connectFcn() {
 
 
 /////////////////////////////////////////////////////////////////
-/////////////////////     QUESTIONS  FUNCTIONS        ////////////////////
+/////////////////////     QUESTIONS  FUNCTIONS        ///////////
 /////////////////////////////////////////////////////////////////
 
 
@@ -179,31 +186,6 @@ function addQuestion(question, answer, ch1, ch2, ch3, userId) {
     })
 }
 
-// get the question from the database
-// function getQuestion(id) {
-    
-//         connectFcn().then(() => {
-
-//             Questions.findOne({
-//                 _id: id
-//             }).then(question => {
-
-//                 if (question) {
-//                     //question.id = question._id
-//                     return(question)
-//                 } else {
-//                     return(new Error("can not find a question with this id:" + id))
-//                 }
-//             }).catch(error => {
-//                 return(error)
-//             })
-//         }).catch(error => {
-//             return(error)
-//         })
-    
-
-// }
-
 function getQuestion(id) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
@@ -227,12 +209,15 @@ function getQuestion(id) {
     })
 
 }
+//function to show all questions in the exam interface using questions ids
 function getQuestions(ids) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
 
             Questions.find({
-                _id: {$in : ids}
+                _id: {
+                    $in: ids
+                }
             }).then(questions => {
 
                 resolve(questions)
@@ -245,7 +230,8 @@ function getQuestions(ids) {
     })
 
 }
-// this function gets all the questions from the admin
+
+//function to get all the questions from the database to use them in edit and delete
 function getAllQuestion(userId) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
@@ -275,31 +261,10 @@ function getAllQuestion(userId) {
     })
 }
 
-// function findQuesions() {
-//     return new Promise((resolve, reject) => {
-//         connectFcn().then(() => {
-//             Questions.find().then(questions => {
-//                 if (questions) {
-//                     resolve(questions)
-//                 } else {
-//                     reject(new Error("can not find this questions"))
-//                 }
-
-//             }).catch(error => {
-//                 reject(error)
-//             })
-
-//         }).catch(error => {
-//             reject(error)
-//         })
-
-//     })
-// }
 // this function is for editing the questions , choices and answer
 function updatedQuestions(question, answer, ch1, ch2, ch3, questionid, userId) {
     return new Promise((resolve, reject) => {
-        try { // with async function we need try catch to get an error- 
-
+        try {
             // going to use iffy as this function will have many callings. and promises will be too nested. so i will use async await
             (async () => {
 
@@ -353,27 +318,25 @@ function deleteQuestion(questionid, userId) {
                 reject(new Error('Nice Try Hacking :) '))
             }
 
-
-
-
         }).catch(error => {
             reject(error)
         })
     })
 }
 
+// function to delete the question from the exam db
 function deleteQuestionExam(questionid) {
     return new Promise((resolve, reject) => {
         getQuestion(questionid).then(question => {
-            
-                Questions.deleteOne({
-                    _id: questionid
-                }).then(() => {
-                    resolve()
-                }).catch(error => {
-                    reject(error)
-                })
-            
+
+            Questions.deleteOne({
+                _id: questionid
+            }).then(() => {
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+
 
 
 
@@ -383,22 +346,24 @@ function deleteQuestionExam(questionid) {
         })
     })
 }
+
+
+
 /////////////////////////////////////////////////////////////////
-/////////////////////     EXAMS  FUNCTIONS        ////////////////////
+/////////////////////     EXAMS  FUNCTIONS        ///////////////
 /////////////////////////////////////////////////////////////////
-function createExam(examTitle,questionsIds) {
+
+// this function to create an exam and save it in the database
+function createExam(examTitle, questionsIds) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
-
-
-            
-                const newExam = new Exams({
+            const newExam = new Exams({
                 title: examTitle,
                 questions: questionsIds
 
             })
 
-            newExam.save().then((exam) => {
+            newExam.save().then(() => {
                 resolve()
             }).catch(error => {
                 if (error.code === 11000) {
@@ -407,7 +372,7 @@ function createExam(examTitle,questionsIds) {
                     reject(error)
                 }
             })
-            
+
 
 
 
@@ -443,25 +408,18 @@ function getAllExams() {
 function getExam(examId) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
-            //const db = client.db('test1')
-            Exams.findOne({_id: examId}).then(foundExam => {
-                //console.log(foundExam);
-                //client.close()
+            
+            Exams.findOne({
+                _id: examId
+            }).then(foundExam => {
 
-                
                 if (foundExam) {
-                    
-                    
-                    
                     resolve(foundExam)
-                    
-                    
-                    
                 } else {
                     reject(new Error('can not find an exam with this id: ' + id))
                 }
             }).catch(error => {
-                //client.close()
+                
                 reject(error);
             })
 
@@ -475,10 +433,10 @@ function getExam(examId) {
 
 
 /////////////////////////////////////////////////////////////////
-/////////////////////     USERS  FUNCTIONS        ////////////////////
+/////////////////////     USERS  FUNCTIONS        ///////////////
 /////////////////////////////////////////////////////////////////
 
-// function to register the user 
+// function to register the user in the database
 function registerUser(username, email, password) {
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
@@ -509,9 +467,9 @@ function registerUser(username, email, password) {
 
 }
 
-// function to check if the user exists
+// function to check if the user exists in the database so he can login
 function checkUser(email, password) {
-    // your code
+    
     return new Promise((resolve, reject) => {
         connectFcn().then(() => {
 
@@ -540,22 +498,23 @@ function checkUser(email, password) {
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////          EXPORTING THE FUNCTIONS VIA MODULES      /////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
-// exporting the functions via module
 module.exports = {
     /////  questions exports   ////
     addQuestion,
-    getQuestion,
     updatedQuestions,
     getAllQuestion,
     deleteQuestion,
     getQuestions,
     deleteQuestionExam,
+
     ////   exams exports    ////
     createExam,
     getAllExams,
     getExam,
-    
 
     ////   users exports    ////
     registerUser,

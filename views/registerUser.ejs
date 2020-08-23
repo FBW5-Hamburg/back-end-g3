@@ -80,6 +80,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
 
+	<!-- show modals / succes and error modals -->
 	<div class="modal" tabindex="-1" role="dialog" id="resultModal">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -98,7 +99,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
           </div>
         </div>
       </div>
-    
+	
+	  
 	<!-- //main -->
 	<script>
 		
@@ -168,16 +170,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					}
 
 
-					// alert('Successfull registration')
-					// showModal(false, "Success Registration",
-					// 	"this User saved correctly and it will be shown in users gallery")
-
 				}).catch(error => {
 					showModal(true, "Server error", "call the admin because of this error")
 				})
 			} else {
 				showModal(true, "Alert!", checkValidation.message)
-				// alert(checkValidation.message)
+				
 			}
 		})
 

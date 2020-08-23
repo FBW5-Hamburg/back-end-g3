@@ -19,21 +19,14 @@
         <div class="row"><br><br>
             <div class="col-sm-8 col-sm-offset-2">
                 <div class="loader">
-                    <!-- <div class="col-xs-3 col-xs-offset-5">
-                        <div id="loadbar" style="display: none;">
-                            <img src="https://8finatics.s3.amazonaws.com/static/reload_emi.gif" alt="Loading"
-                                class="center-block loanParamsLoader">
-                        </div>
-                    </div> -->
-
-
+            
                     <% for(let i= 0; i < questions.length; i++){%>
                     <div id="quiz">
 
                         <div class="question">
 
                             <h3><span class="label label-warning" id="qid"><%=i+1%></span>
-                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+                                
                                 <input type="text"  class="questionInp"
                                     value="<%= questions[i].Q %>">
                             </h3>
@@ -59,7 +52,7 @@
                         <div>
                             <input type="number"  class="answerInp" value="<%= questions[i].A %>">
                         </div>
-                        <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=i%>">Edit</a> -->
+                        
 
                         <button class="btn btn-success mt-3 editBtn" >edit Now</button>
 
@@ -73,24 +66,7 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <div id="result-of-question" class="pulse animated" style="display: none;">
-                    <span id="totalCorrect" class="pull-right"></span>
-                    <table class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Question No.</th>
-                                <th>Our answer</th>
-                                <th>Your answer</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="quizResult"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <%- include('partials/htmlJsFooter') %>
@@ -117,12 +93,12 @@
                         
                     };
                     console.log(sentQuestion);
-//ANCHOR maybe : fetch('admin/editQuestions'
+
                     fetch('/admin/editQuestions', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
-                            //'Content-Type': 'application/x-www-form-urlencoded'
+                           
                         },
                         body: JSON.stringify(sentQuestion)
 

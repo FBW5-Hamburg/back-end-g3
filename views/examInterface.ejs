@@ -14,12 +14,7 @@
 
 <body>
     <div class="container ">
-        <!-- <div class="row"><br>
-            <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
-                    <img
-                        src="https://lh4.googleusercontent.com/fLEIj3iQb7O1FhjOpLFbJtHmsMlLGmLynSWUvAP70qF0HLEBty-FANvwweg7Sv2XqSpzOKNI=w1366-h638"></a>
-            </span>
-        </div> -->
+        
         <div><br><br>
             <div class="col-md-4 mb-3">
                 <label for="examTitle">Title</label>
@@ -30,23 +25,13 @@
             <div>
                 <div class="loader ">
 
-
-
-
-                    <!-- <div style="height: 20px;">
-                        <label for="examTitle">Title</label>
-                        <input type="text"  id="examTitle" placeholder="Please enter the exam title"
-                            required>
-
-                    </div> -->
-
                     <% for(let i= 0; i < questions.length; i++){%>
                     <div id="quiz" class=" col-md-3 quizContainer ">
 
                         <div class="question">
 
                             <h3><span class="label label-warning" id="qid"><%=i+1%></span>
-                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+                                
                                 <input type="text" class="questionInp" value="<%= questions[i].Q %>">
                             </h3>
                         </div>
@@ -69,9 +54,7 @@
                             <input type="number" class="answerInp" value="<%= questions[i].A %>">
                         </div>
                         <br>
-                        <!-- <a href="#" class="btn btn-success mt-3 editBtn" questionid="%=_id%>">Edit</a> -->
-
-
+                        
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input checkBoxInp" qid="<%-questions[i].id%>">
                             <label class="form-check-label" for="checkBoxInp">Add this question</label>
@@ -81,7 +64,7 @@
                         <br>
                         <br>
                     </div>
-                    <!-- <br> -->
+                    
                     <% } %>
                     <br>
                 </div>
@@ -91,32 +74,14 @@
 
                 <button class="btn btn-success mt-3 " id="saveBtnExam">Save this exam</button>
 
-                <!-- <div class="text-muted">
-                    <span id="answer"></span>
-                </div> -->
                 <br> <br> <br>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <div id="result-of-question" class="pulse animated" style="display: none;">
-                    <span id="totalCorrect" class="pull-right"></span>
-                    <table class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Question No.</th>
-                                <th>Our answer</th>
-                                <th>Your answer</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="quizResult"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
+
+    <!-- show modals / succes and error modals -->
     <div class="modal" tabindex="-1" role="dialog" id="resultModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -171,13 +136,13 @@
                                 break;
 
                             case 2:
-                                //alert("Please enter the exam title")
+                                
                                 showModal(true, "Question title is missed",
                                             "Please enter the exam title"
                                             )
                                 break;
                             case 3:
-                                //alert("This Exam is already exist")
+                                
                                 showModal(true, "exam title is exist","this exam already exist, please type another exam title")
                                 break;
                             case 4:
@@ -186,11 +151,11 @@
                                 break;
                         }
                     }).catch(error => {
-                        // alert("server side error, please contact the web admin")
+                        
                         showModal(true, "error", "server side error, please contact the web admin")
                     })
                 } else {
-                    // alert("can not connect to the server")
+                    
                     showModal(true, "server error", "can not connect to the server")
                 }
 

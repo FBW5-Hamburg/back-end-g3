@@ -103,7 +103,7 @@
                 }).then(response => {
                     if (response.status == 200) {
                         response.json().then(data => {
-                            console.log(data);
+                            
                             switch (data) {
                                 case 1:
                                     window.location = '/admin'
@@ -123,13 +123,13 @@
                             }
                             
                         }).catch(error =>{
-                            console.log(error);
+                            
                             showModal(true , "error on getting data",'please contact the Administrator')
                             
                         }) // parses JSON response into native Javascript objects
                     }
                 }) .catch(error =>{
-                        console.log(error);
+                        
                         showModal(true , "server side error" , error.message)
                 }) 
             }else {

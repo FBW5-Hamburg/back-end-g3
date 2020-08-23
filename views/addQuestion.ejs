@@ -15,25 +15,17 @@
 <body>
     <div class="container">
         <div class="row"><br>
-            <!-- <span class="image-position"><a href="https://www.facebook.com/meuix/?ref=settings" target="_blank">
-	           <img src="https://lh4.googleusercontent.com/fLEIj3iQb7O1FhjOpLFbJtHmsMlLGmLynSWUvAP70qF0HLEBty-FANvwweg7Sv2XqSpzOKNI=w1366-h638"></a>
-	        </span> -->
         </div>
         <div class="row"><br><br>
-            <div >
+            <div>
                 <div class="loader">
-                    <!-- <div class="col-xs-3 col-xs-offset-5">
-                        <div id="loadbar" style="display: none;">
-                            <img src="https://8finatics.s3.amazonaws.com/static/reload_emi.gif" alt="Loading" class="center-block loanParamsLoader" >
-                        </div>
-                    </div> -->
 
                     <div id="quiz" style="background-color: rgb(12, 49, 12);
                     border-radius: 15% 0 55px 55px;">
 
                         <div class="question">
                             <h3><span class="label label-warning" id="qid">1</span>
-                                <!-- <span id="question"> How can you add a single line comment in a JavaScript?</span> -->
+
                                 <input type="text" id="question" placeholder=" Please Insert your question here "
                                     style="width: 50vw; height: 8vh;">
                             </h3>
@@ -54,39 +46,20 @@
 
                             </li>
                         </ul>
-                        <input type="number" id="answer" placeholder="correct answer" min="1" max="3" >
+                        <input type="number" id="answer" placeholder="correct answer" min="1" max="3">
                         <br> <br>
                         <button class="btn btn-success mt-3" id="questionSaveBtn">Save Now</button>
                     </div>
                 </div>
-                <div class="text-muted">
-                    <span id="answer"></span>
-                </div>
+
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <div id="result-of-question" class="pulse animated" style="display: none;">
-                    <span id="totalCorrect" class="pull-right"></span>
-                    <table class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Question No.</th>
-                                <th>Our answer</th>
-                                <th>Your answer</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="quizResult"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+
     </div>
 
 
-
+    <!-- show modals / succes and error modals -->
     <div class="modal" tabindex="-1" role="dialog" id="resultModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -106,6 +79,8 @@
         </div>
     </div>
 
+
+    <!-- JSCRIPT PART START -->
     <%- include('partials/htmlJsFooter') %>
     <script>
         // connect the save btn 
@@ -132,20 +107,20 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                    //'Content-Type': 'application/x-www-form-urlencoded'
+                    
                 },
                 body: JSON.stringify(sentQuestion)
             }).then(response => {
-                console.log(response);
+                
                 if (response.status == 200) {
                     response.json().then(data => {
-                        console.log(data);
+                        
                         switch (data) {
                             case 1:
 
                                 showModal(false, "Success",
-                                    "the question has been saved correctly and it will be shown in questions gallery"
-                                    )
+                                    "the question has been saved correctly and it will be shown in question bank"
+                                )
                                 question.value = '',
                                     choice1.value = '1.  ',
                                     choice2.value = '2.  ',
@@ -155,7 +130,7 @@
                             case 2:
                                 showModal(true, "Error",
                                     "Some entries is missing, make sure to enter all required data"
-                                    )
+                                )
 
                                 break;
                             case 3:
@@ -201,6 +176,7 @@
         }
     </script>
 
+    <!-- JSCRIPT PART START -->
 
 
 </body>
